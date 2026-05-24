@@ -35,4 +35,9 @@ public class PlanVueloService {
 
     //Eliminar plan de vuelo
 
+    public String eliminarPlanesVuelo(int idPlanVuelo){
+        planVueloRepository.deleteById(idPlanVuelo);
+        return "El plan de vuelo ha sido eliminado";
+    }
+
 }

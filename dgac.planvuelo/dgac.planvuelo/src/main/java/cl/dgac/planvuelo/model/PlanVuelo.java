@@ -1,7 +1,5 @@
 package cl.dgac.planvuelo.model;
 
-import java.time.LocalDateTime;
-
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -27,7 +25,7 @@ public class PlanVuelo {
     private String psGPS;
 
     @Column(name = "fechaPV", nullable=false)
-    private LocalDateTime fechaPDV;
+    private int fechaPDV;
 
     @Column(name = "alturaMaxima", nullable=false)
     private double altMax;
