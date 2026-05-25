@@ -30,11 +30,15 @@ public class PlanVueloController {
         this.pVueloService = pVueloService;
     }
 
+    //Mostrar todos los planes de vuelo
+
     @GetMapping
     public ResponseEntity<List<PlanVuelo>> listarPV(){
         List<PlanVuelo> listPV = pVueloService.mostrarPlanesVuelo();
         return ResponseEntity.ok(listPV);
     }
+
+    //Registrar nuevos planes de vuelo
 
     @PostMapping
     public ResponseEntity<PlanVuelo> guardarPV(@Valid @RequestBody CreatePlanVuelo request){
@@ -42,11 +46,15 @@ public class PlanVueloController {
         return ResponseEntity.status(HttpStatus.CREATED).body(pV);
     }
 
+    //Actualizar datos de planes de vuelo
+
     @PutMapping
     public ResponseEntity<PlanVuelo> actualizarPV(@Valid @RequestBody UpdatePlanVuelo request){
         PlanVuelo pV = pVueloService.actualizarPlanesVuelo(PlanVueloMapper.toModel(request));
         return ResponseEntity.status(HttpStatus.CREATED).body(pV);
     }
+
+    //Eliminar planes de vuelo
     
     @DeleteMapping
     public ResponseEntity<String> eliminarPV(@PathVariable int idPlanVuelo){
