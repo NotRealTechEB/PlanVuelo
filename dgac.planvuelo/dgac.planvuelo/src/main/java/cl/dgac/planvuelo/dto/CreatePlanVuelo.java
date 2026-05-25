@@ -10,7 +10,7 @@ public record CreatePlanVuelo (
     @Size(max = 30, message = "La ubicación GPS no puede superar los 30 caracteres") String psGPS,
 
     //Fecha de plan de vuelo
-    @NegativeOrZero(message = "Fecha deL PLAN DE VUELO no puede ser negativa o igual a zero")
+    @NegativeOrZero(message = "Fecha del PLAN DE VUELO no puede ser negativa o igual a zero")
     @Digits(integer = 6, fraction=0, message = "La fecha debe contener 6 digitos en formato DDMMAAAA") int fechaPDV,
 
     //Altura máxima
