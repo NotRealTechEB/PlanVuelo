@@ -1,26 +1,40 @@
 package cl.dgac.planvuelo.dto;
 
-import jakarta.validation.constraints.Digits;
+import java.time.LocalDateTime;
+
 import jakarta.validation.constraints.NegativeOrZero;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 
 public record UpdatePlanVuelo (
+
+    //ID Piloto
+    @NotBlank(message="Debe agregar ID de piloto")
+    @NegativeOrZero(message="ID de piloto no puede ser negativo ni cero") int idPiloto,
+
+    //ID Drone
+    @NotBlank(message="Debe agregar ID de dron")
+    @NegativeOrZero(message="ID de dron no puede ser negativo ni cero") int idDrone,
 
     //Ubicación GPS
     @Size(max = 30, message = "La ubicación GPS no puede superar los 30 caracteres") String psGPS,
 
     //Fecha de plan de vuelo
-    @NegativeOrZero(message = "Fecha del PLAN DE VUELO no puede ser negativa o igual a zero")
-    @Digits(integer = 6, fraction=0, message = "La fecha debe contener 6 digitos en formato DDMMAAAA") int fechaPDV,
+    @NotNull(message = "Fecha del PLAN DE VUELO no puede ser NULL") LocalDateTime fechaPDV,
 
     //Altura máxima
     @NegativeOrZero(message = "La altura máxima no puede ser negativa o cero") double altMax,
 
     //Tiempo estimado
-    @NegativeOrZero(message = "El tiempo estimado no puede ser negativo o cero") double tiEst,
+    @NegativeOrZero(message = "El tiempo estimado no puede ser negativo o cero") int tiEst,
 
     //Region
-    @Size(max = 60, message = "La región no puede superar los 60 caracteres") String region
+    @Size(max = 60, message = "La región no puede superar los 60 caracteres") String region,
+
+    //Estado proceso
+    @NotNull(message="El estado debe ser declarado") 
+    @Size(max = 30, message = "El estado no puede superar los 30 caracteres")String estado
 )
 {
 }

@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.reactive.function.client.WebClient;
 
 import cl.dgac.planvuelo.dto.CreatePlanVuelo;
 import cl.dgac.planvuelo.dto.UpdatePlanVuelo;
@@ -26,11 +25,11 @@ import jakarta.validation.Valid;
 public class PlanVueloController {
 
     private final PlanVueloService pVueloService;
-    private final WebClient pilotoApiWebClient;
+    //private final WebClient pilotoApiWebClient;
 
-    public PlanVueloController(PlanVueloService pVueloService, WebClient pilotoApiWebClient){
+    public PlanVueloController(PlanVueloService pVueloService/* , WebClient pilotoApiWebClient*/){
         this.pVueloService = pVueloService;
-        this.pilotoApiWebClient = pilotoApiWebClient;
+        //this.pilotoApiWebClient = pilotoApiWebClient;
     }
 
     //Mostrar todos los planes de vuelo

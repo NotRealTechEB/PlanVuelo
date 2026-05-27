@@ -1,5 +1,7 @@
 package cl.dgac.planvuelo.model;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -21,19 +23,28 @@ public class PlanVuelo {
     @Column(name = "idPlanVuelo")
     private int idPlanVuelo;
 
+    @Column(name="idPiloto")
+    private int idPiloto;
+
+    @Column(name="idDrone")
+    private int idDrone;
+
     @Column(name = "ubicacionGPS", nullable=false, length = 30)
     private String psGPS;
 
     @Column(name = "fechaPV", nullable=false)
-    private int fechaPDV;
+    private LocalDateTime fechaPDV;
 
     @Column(name = "alturaMaxima", nullable=false)
     private double altMax;
 
-    @Column(name = "tiempoEstimado", nullable=false)
-    private double tiEst;
+    @Column(name = "tiempoEstimadoMinutos", nullable=false)
+    private int tiEst;
 
-    @Column(name = "region", nullable=false, length=60)
+    @Column(name = "region", nullable=false, length=45)
     private String region;
+
+    @Column(name= "estadoProceso", nullable=false, length=30)
+    private String estado;
 
 }

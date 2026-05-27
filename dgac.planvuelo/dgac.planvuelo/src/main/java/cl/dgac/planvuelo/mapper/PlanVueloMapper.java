@@ -6,10 +6,12 @@ import cl.dgac.planvuelo.model.PlanVuelo;
 
 public class PlanVueloMapper {
     public static PlanVuelo toModel(CreatePlanVuelo request){
-        return new PlanVuelo(0, request.psGPS(), request.fechaPDV(), request.altMax(), request.tiEst(), request.region());
+        return new PlanVuelo(0, request.idPiloto(), request.idDrone(), request.psGPS(), request.fechaPDV(), 
+        request.altMax(), request.tiEst(), request.region(), request.estado());
     }
 
     public static PlanVuelo toModel(UpdatePlanVuelo request){
-        return new PlanVuelo(0, request.psGPS(), request.fechaPDV(), request.altMax(), request.tiEst(), request.region());
+        return new PlanVuelo(0, request.idPiloto(), request.idDrone(), request.psGPS(), request.fechaPDV(), 
+        request.altMax(), request.tiEst(), request.region(), request.estado());
     }
 }
