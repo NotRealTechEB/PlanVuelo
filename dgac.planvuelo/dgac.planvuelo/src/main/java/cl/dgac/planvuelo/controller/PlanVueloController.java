@@ -50,7 +50,7 @@ public class PlanVueloController {
 
     //Actualizar datos de planes de vuelo
 
-    @PutMapping
+    @PutMapping({"idPlanVuelo"})
     public ResponseEntity<PlanVuelo> actualizarPV(@Valid @RequestBody UpdatePlanVuelo request){
         PlanVuelo pV = pVueloService.actualizarPlanesVuelo(PlanVueloMapper.toModel(request));
         return ResponseEntity.status(HttpStatus.CREATED).body(pV);
@@ -58,7 +58,7 @@ public class PlanVueloController {
 
     //Eliminar planes de vuelo
     
-    @DeleteMapping
+    @DeleteMapping({"idPlanVuelo"})
     public ResponseEntity<String> eliminarPV(@PathVariable int idPlanVuelo){
         pVueloService.eliminarPlanesVuelo(idPlanVuelo);
         return ResponseEntity.noContent().build();
