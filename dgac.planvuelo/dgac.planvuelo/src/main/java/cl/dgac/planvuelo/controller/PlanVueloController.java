@@ -34,7 +34,7 @@ public class PlanVueloController {
 
     //Mostrar todos los planes de vuelo
 
-    @GetMapping
+    @GetMapping("/datosPV")
     public ResponseEntity<List<PlanVuelo>> listarPV(){
         List<PlanVuelo> listPV = pVueloService.mostrarPlanesVuelo();
         return ResponseEntity.ok(listPV);
