@@ -21,6 +21,11 @@ public class PlanVueloService {
         return planVueloRepository.findAll();
     }
 
+        //Planes por ID
+    public PlanVuelo encontrarPVById(int idPlanVuelo){
+        return planVueloRepository.findById(idPlanVuelo).orElseThrow(() -> new RuntimeException("ID Plan de vuelo " + idPlanVuelo + " no existe."));
+    }
+
     //Método para agregar un plan de vuelo
 
     public PlanVuelo agregarPlanesVuelo(PlanVuelo pV){
