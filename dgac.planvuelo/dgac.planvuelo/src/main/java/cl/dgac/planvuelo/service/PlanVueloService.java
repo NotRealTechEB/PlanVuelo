@@ -10,6 +10,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import cl.dgac.planvuelo.dto.DatosDronDTO;
 import cl.dgac.planvuelo.dto.DatosPilotoDTO;
 import cl.dgac.planvuelo.dto.PlanVueloResponseDTO;
+import cl.dgac.planvuelo.exception.ResourceNotFoundException;
 import cl.dgac.planvuelo.mapper.PlanVueloMapper;
 import cl.dgac.planvuelo.model.PlanVuelo;
 import cl.dgac.planvuelo.repository.PlanVueloRepository;
@@ -30,7 +31,7 @@ public class PlanVueloService {
 
         //Planes por ID
     public PlanVuelo encontrarPVById(int idPlanVuelo){
-        return planVueloRepository.findById(idPlanVuelo).orElseThrow(() -> new RuntimeException("ID Plan de vuelo " + idPlanVuelo + " no existe."));
+        return planVueloRepository.findById(idPlanVuelo).orElseThrow(() -> new ResourceNotFoundException("ID Plan de vuelo " + idPlanVuelo + " no existe."));
     }
 
     //Método para agregar un plan de vuelo
@@ -56,7 +57,9 @@ public class PlanVueloService {
 
     public PlanVueloResponseDTO planVueloCompleto(int idPlanVuelo) {
         PlanVuelo plan = encontrarPVById(idPlanVuelo);
-
+        if (plan == null) {
+        throw new ResourceNotFoundException("ID Plan de vuelo " + idPlanVuelo + " no existe.");
+    }
         DatosPilotoDTO piloto = obtenerResumenPiloto(plan.getIdPiloto());
         DatosDronDTO dron = obtenerDatosDron(null);
 
