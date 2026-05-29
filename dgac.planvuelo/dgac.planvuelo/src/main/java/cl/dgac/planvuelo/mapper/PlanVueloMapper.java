@@ -1,6 +1,8 @@
 package cl.dgac.planvuelo.mapper;
 
 import cl.dgac.planvuelo.dto.CreatePlanVuelo;
+import cl.dgac.planvuelo.dto.DatosDronDTO;
+import cl.dgac.planvuelo.dto.DatosPilotoDTO;
 import cl.dgac.planvuelo.dto.PlanVueloResponseDTO;
 import cl.dgac.planvuelo.dto.UpdatePlanVuelo;
 import cl.dgac.planvuelo.model.PlanVuelo;
@@ -16,11 +18,20 @@ public class PlanVueloMapper {
         request.altMax(), request.tiEst(), request.region(), request.estado());
     }
 
-    public static PlanVueloResponseDTO toResponseDTO(PlanVuelo request) {
-        if (request == null) {
-            return null;
-        }
-        return new PlanVueloResponseDTO(0, request.getIdPiloto(), request.getIdDrone(), request.getPsGPS(), null, request.getAltMax(), 
-        request.getTiEst(), request.getRegion());
+    public static PlanVueloResponseDTO toModel(PlanVuelo plan, DatosPilotoDTO piloto, DatosDronDTO dron) {
+        PlanVueloResponseDTO dto = new PlanVueloResponseDTO();
+        
+        dto.setIdPlanVuelo(plan.getIdPlanVuelo());
+        dto.setPsGPS(plan.getPsGPS());
+        dto.setFechaPDV(plan.getFechaPDV());
+        dto.setAltMax(plan.getAltMax());
+        dto.setTiEst(plan.getTiEst());
+        dto.setRegion(plan.getRegion());
+        
+        dto.setIdPiloto(piloto.getIdPiloto());
+
+        dto.setIdDrone(dron.getIdDrone());
+        
+        return dto;
     }
 }

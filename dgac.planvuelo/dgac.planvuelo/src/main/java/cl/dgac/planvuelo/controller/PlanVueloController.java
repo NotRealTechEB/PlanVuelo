@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import cl.dgac.planvuelo.dto.CreatePlanVuelo;
 import cl.dgac.planvuelo.dto.PlanVueloResponseDTO;
@@ -27,11 +28,11 @@ import jakarta.validation.Valid;
 public class PlanVueloController {
 
     private final PlanVueloService pVueloService;
-    //private final WebClient pilotoApiWebClient;
+    private final WebClient pilotoApiWebClient;
 
-    public PlanVueloController(PlanVueloService pVueloService/* , WebClient pilotoApiWebClient*/){
+    public PlanVueloController(PlanVueloService pVueloService, WebClient pilotoApiWebClient){
         this.pVueloService = pVueloService;
-        //this.pilotoApiWebClient = pilotoApiWebClient;
+        this.pilotoApiWebClient = pilotoApiWebClient;
     }
 
     //Mostrar todos los planes de vuelo
@@ -46,10 +47,9 @@ public class PlanVueloController {
 
     @GetMapping("/buscar")
     public ResponseEntity<PlanVueloResponseDTO> obtenerPVPorId(@RequestParam("idPlanVuelo") int idPlanVuelo) {
-        PlanVuelo pV = pVueloService.encontrarPVById(idPlanVuelo); 
-        PlanVueloResponseDTO dto = PlanVueloMapper.toResponseDTO(pV);
-        return ResponseEntity.ok(dto);
-}
+        PlanVueloResponseDTO pV = pVueloService.planVueloCompleto(idPlanVuelo);
+        return ResponseEntity.ok(pV);
+    }
 
     //Registrar nuevos planes de vuelo
 
