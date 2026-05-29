@@ -21,12 +21,6 @@ public class PlanVueloService {
     private WebClient pilotoApiWebClient;
     private WebClient dronApiWebClient;
 
-    public PlanVueloService(@Qualifier("pilotoApiWebClient")WebClient pilotoApiWebClient, 
-                            @Qualifier("dronApiWebClient")WebClient dronApiWebClient) {
-        this.pilotoApiWebClient = pilotoApiWebClient;
-        this.dronApiWebClient = dronApiWebClient;
-    }
-
     //Metodos para mostrar los planes de vuelo registrados.
 
         //Todos los planes de vuelo
@@ -58,6 +52,7 @@ public class PlanVueloService {
         return "El plan de vuelo ha sido eliminado";
     }
 
+    //Obtención del Plan de vuelo completo
 
     public PlanVueloResponseDTO planVueloCompleto(int idPlanVuelo) {
         PlanVuelo plan = encontrarPVById(idPlanVuelo);
@@ -67,7 +62,6 @@ public class PlanVueloService {
 
         return PlanVueloMapper.toModel(plan, piloto, dron);
     }
-
 
     // Comunicación a API de Pilotos 
 
