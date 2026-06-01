@@ -12,11 +12,11 @@ import cl.dgac.planvuelo.model.PlanVuelo;
 
 public class PlanVueloMapper {
     public static PlanVuelo toModel(CreatePlanVuelo request){
-        return new PlanVuelo(0, null, null, null, null, 0, 0, null);
+        return new PlanVuelo(0, null, null, null, null, 0, 0, null, null);
     }
 
     public static PlanVuelo toModel(UpdatePlanVuelo request){
-        return new PlanVuelo(0, null, null, null, null, 0, 0, null);
+        return new PlanVuelo(0, null, null, null, null, 0, 0, null, null);
     }
 
     public static PlanVueloResponseDTO toModel(PlanVuelo plan, PilotoResponseDTO piloto, DronResponseDTO dron) {

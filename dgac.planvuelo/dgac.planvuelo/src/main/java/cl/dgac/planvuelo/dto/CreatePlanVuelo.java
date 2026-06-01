@@ -37,7 +37,9 @@ public record CreatePlanVuelo (
     Integer tiempoEstimado,
 
     @NotNull(message = "Debe ingresar la región") 
-    String region
+    String region,
+
+    String codigoVuelo
 )
 {
 

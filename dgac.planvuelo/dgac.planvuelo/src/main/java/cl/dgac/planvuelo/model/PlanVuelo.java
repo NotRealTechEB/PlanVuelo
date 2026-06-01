@@ -43,4 +43,7 @@ public class PlanVuelo {
 
     @Column(name = "region", nullable=false, length=18)
     private Region region;
+
+    @Column(name = "codigoVuelo", length = 20)
+    private String codigoVuelo;
 }
