@@ -6,7 +6,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,7 +23,7 @@ import cl.dgac.planvuelo.service.PlanVueloService;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/api/v1/dgac/PlanVuelo")
+@RequestMapping("/api/v1/plan-vuelo")
 public class PlanVueloController {
 
     private final PlanVueloService pVueloService;
@@ -69,8 +68,8 @@ public class PlanVueloController {
 
     //Eliminar planes de vuelo
     
-    @DeleteMapping({"idPlanVuelo"})
-    public ResponseEntity<String> eliminarPV(@PathVariable int idPlanVuelo){
+    @DeleteMapping()
+    public ResponseEntity<String> eliminarPV(@RequestParam("idPlanVuelo") int idPlanVuelo){
         pVueloService.eliminarPlanesVuelo(idPlanVuelo);
         return ResponseEntity.noContent().build();
     }

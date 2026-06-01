@@ -7,12 +7,12 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PilotoResponse {
-    private int rutPiloto;
+public class PilotoResponseDTO {
+    private String rutPiloto;
     private String pNombrePiloto;
     private String sNombrePiloto;
     private String apPaternoPiloto;
-    private String apMatenoPiloto;
+    private String apMaternoPiloto;
 
 }
  

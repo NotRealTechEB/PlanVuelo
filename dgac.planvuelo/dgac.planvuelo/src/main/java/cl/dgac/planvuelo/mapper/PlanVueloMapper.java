@@ -1,37 +1,51 @@
 package cl.dgac.planvuelo.mapper;
 
 import cl.dgac.planvuelo.dto.CreatePlanVuelo;
-import cl.dgac.planvuelo.dto.DatosDronDTO;
-import cl.dgac.planvuelo.dto.DatosPilotoDTO;
+import cl.dgac.planvuelo.dto.DronResponseDTO;
+import cl.dgac.planvuelo.dto.PilotoResponseDTO;
 import cl.dgac.planvuelo.dto.PlanVueloResponseDTO;
 import cl.dgac.planvuelo.dto.UpdatePlanVuelo;
 import cl.dgac.planvuelo.model.PlanVuelo;
 
 public class PlanVueloMapper {
     public static PlanVuelo toModel(CreatePlanVuelo request){
-        return new PlanVuelo(0, request.idPiloto(), request.idDrone(), request.psGPS(), request.fechaPDV(), 
-        request.altMax(), request.tiEst(), request.region(), request.estado());
+        return new PlanVuelo(0, null, null, null, null, 0, 0, null);
     }
 
     public static PlanVuelo toModel(UpdatePlanVuelo request){
-        return new PlanVuelo(0, request.idPiloto(), request.idDrone(), request.psGPS(), request.fechaPDV(), 
-        request.altMax(), request.tiEst(), request.region(), request.estado());
+        return new PlanVuelo(0, null, null, null, null, 0, 0, null);
     }
 
-    public static PlanVueloResponseDTO toModel(PlanVuelo plan, DatosPilotoDTO piloto, DatosDronDTO dron) {
-        PlanVueloResponseDTO dto = new PlanVueloResponseDTO();
-        
-        dto.setIdPlanVuelo(plan.getIdPlanVuelo());
-        dto.setPsGPS(plan.getPsGPS());
-        dto.setFechaPDV(plan.getFechaPDV());
-        dto.setAltMax(plan.getAltMax());
-        dto.setTiEst(plan.getTiEst());
-        dto.setRegion(plan.getRegion());
-        
-        dto.setIdPiloto(piloto.getIdPiloto());
 
-        dto.setIdDrone(dron.getIdDrone());
-        
-        return dto;
+
+
+    public static PlanVueloResponseDTO toModel(PlanVuelo plan, PilotoResponseDTO piloto, DronResponseDTO dron) {
+    PlanVueloResponseDTO dto = new PlanVueloResponseDTO();
+
+    dto.setHoraDespegue(plan.getHoraDespegue());
+    dto.setTiempoEstimado(plan.getTiempoEstimado());
+
+    if(plan.getHoraDespegue() != null){
+        dto.setHoraAterrizajeEstimada(plan.getHoraDespegue().plusMinutes(plan.getTiempoEstimado()));
     }
+
+    dto.setPsGPS(plan.getPsGPS());
+    
+    if (piloto != null) {
+        dto.setRutPiloto(piloto.getRutPiloto());
+
+        String pNombre = piloto.getPNombrePiloto() != null ? piloto.getPNombrePiloto():"";
+        String sNombre = piloto.getSNombrePiloto() != null ? piloto.getSNombrePiloto():"";
+        String apPaterno = piloto.getApPaternoPiloto() != null ? piloto.getApPaternoPiloto():"";
+        String apMaterno = piloto.getApMaternoPiloto() != null ? piloto.getApMaternoPiloto():"";
+
+        dto.setNomCompPiloto((pNombre + " " + sNombre + " " + apPaterno + " " + apMaterno).trim());
+    }
+
+    if (dron != null) {
+        dto.setNumeroRegistro(dron.getNumeroDrone()); 
+    }
+    
+    return dto;
+}
 }

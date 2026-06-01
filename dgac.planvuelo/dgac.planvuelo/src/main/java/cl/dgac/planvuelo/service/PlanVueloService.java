@@ -3,12 +3,10 @@ package cl.dgac.planvuelo.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.client.WebClient;
 
-import cl.dgac.planvuelo.dto.DatosDronDTO;
-import cl.dgac.planvuelo.dto.DatosPilotoDTO;
+import cl.dgac.planvuelo.dto.DronResponseDTO;
+import cl.dgac.planvuelo.dto.PilotoResponseDTO;
 import cl.dgac.planvuelo.dto.PlanVueloResponseDTO;
 import cl.dgac.planvuelo.exception.ResourceNotFoundException;
 import cl.dgac.planvuelo.mapper.PlanVueloMapper;
@@ -19,8 +17,7 @@ import cl.dgac.planvuelo.repository.PlanVueloRepository;
 public class PlanVueloService {
     @Autowired
     private PlanVueloRepository planVueloRepository;
-    private WebClient pilotoApiWebClient;
-    private WebClient dronApiWebClient;
+    private ComunicacionApi comunicacionApis;
 
     //Metodos para mostrar los planes de vuelo registrados.
 
@@ -33,6 +30,15 @@ public class PlanVueloService {
     public PlanVuelo encontrarPVById(int idPlanVuelo){
         return planVueloRepository.findById(idPlanVuelo).orElseThrow(() -> new ResourceNotFoundException("ID Plan de vuelo " + idPlanVuelo + " no existe."));
     }
+
+        //Planes por Rut de piloto
+    public List<PlanVuelo> pVByRutPiloto(String rutPiloto){
+        List<PlanVuelo> listPV = planVueloRepository.findByRutPiloto(rutPiloto);
+        if(listPV.isEmpty()){
+            throw new ResourceNotFoundException("No hay planes registrados por el piloto, rut: " +rutPiloto);
+        }
+        return listPV;
+    }    
 
     //Método para agregar un plan de vuelo
 
@@ -55,40 +61,14 @@ public class PlanVueloService {
 
     //Obtención del Plan de vuelo completo
 
-    public PlanVueloResponseDTO planVueloCompleto(int idPlanVuelo) {
-        PlanVuelo plan = encontrarPVById(idPlanVuelo);
+    public PlanVueloResponseDTO planVueloCompleto(String rutPiloto) {
+        List<PlanVuelo> plan = planVueloRepository.findByRutPiloto(rutPiloto);
         if (plan == null) {
-        throw new ResourceNotFoundException("ID Plan de vuelo " + idPlanVuelo + " no existe.");
+        throw new ResourceNotFoundException("ID Plan de vuelo " + rutPiloto + " no existe.");
     }
-        DatosPilotoDTO piloto = obtenerResumenPiloto(plan.getIdPiloto());
-        DatosDronDTO dron = obtenerDatosDron(null);
+        PilotoResponseDTO piloto = comunicacionApis.obtenerResumenPiloto(rutPiloto)
+        DronResponseDTO dron = comunicacionApis.obtenerDatosDron();
 
         return PlanVueloMapper.toModel(plan, piloto, dron);
     }
-
-    // Comunicación a API de Pilotos 
-
-    @Qualifier("pilotoApiWebClient")
-    public DatosPilotoDTO obtenerResumenPiloto(int idPiloto) {
-        try {
-            return pilotoApiWebClient.get().uri(uriBuilder -> uriBuilder.path("/api/v1/dgac/piloto/resumen").queryParam("idPiloto", idPiloto)
-                .build()).retrieve().bodyToMono(DatosPilotoDTO.class).block();
-        } catch (Exception ex) {
-            return null; 
-        }
-    }
-
-    //Comunicación a API de Drones
-
-    @Qualifier("dronApiWebClient")
-    public DatosDronDTO obtenerDatosDron(Long idDrone){
-        try {
-            return dronApiWebClient.get().uri(uriBuilder -> uriBuilder.path("/api/drones").queryParam("idDrone", idDrone)
-                .build()).retrieve().bodyToMono(DatosDronDTO.class).block();
-        } catch (Exception ex) {
-            return null; 
-        }
-    }
-
-
 }

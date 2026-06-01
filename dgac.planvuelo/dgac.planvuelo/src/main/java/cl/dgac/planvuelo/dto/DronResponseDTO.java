@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-
-public class DatosPilotoDTO {
-    private int idPiloto;
-
+public class DronResponseDTO {
+    private String numeroDrone;
 }

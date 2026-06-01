@@ -23,28 +23,24 @@ public class PlanVuelo {
     @Column(name = "idPlanVuelo")
     private int idPlanVuelo;
 
-    @Column(name="idPiloto")
-    private int idPiloto;
+    @Column(name="rutPiloto", nullable = false, length=12)
+    private String rutPiloto;
 
-    @Column(name="idDrone")
-    private int idDrone;
+    @Column(name="numeroDron")
+    private String numeroDrone;
 
     @Column(name = "ubicacionGPS", nullable=false, length = 30)
     private String psGPS;
 
-    @Column(name = "fechaPV", nullable=false)
-    private LocalDateTime fechaPDV;
+    @Column(name = "horaDespegue", nullable=false)
+    private LocalDateTime horaDespegue;
+
+    @Column(name = "tiempoEstimadoMinutos", nullable=false)
+    private int tiempoEstimado;
 
     @Column(name = "alturaMaxima", nullable=false)
     private double altMax;
 
-    @Column(name = "tiempoEstimadoMinutos", nullable=false)
-    private int tiEst;
-
     @Column(name = "region", nullable=false, length=45)
-    private String region;
-
-    @Column(name= "estadoProceso", nullable=false, length=30)
-    private String estado;
-
+    private Region region;
 }
