@@ -8,5 +8,5 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class DronResponseDTO {
-    private String numeroDrone;
+    private String numeroRegistro;
 }

@@ -41,6 +41,6 @@ public class PlanVuelo {
     @Column(name = "alturaMaxima", nullable=false)
     private double altMax;
 
-    @Column(name = "region", nullable=false, length=45)
+    @Column(name = "region", nullable=false, length=18)
     private Region region;
 }

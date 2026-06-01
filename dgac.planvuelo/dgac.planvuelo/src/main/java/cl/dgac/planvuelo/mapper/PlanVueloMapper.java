@@ -19,8 +19,6 @@ public class PlanVueloMapper {
         return new PlanVuelo(0, null, null, null, null, 0, 0, null);
     }
 
-
-
     public static PlanVueloResponseDTO toModel(PlanVuelo plan, PilotoResponseDTO piloto, DronResponseDTO dron) {
         if (plan == null) return null;
 
@@ -50,7 +48,7 @@ public class PlanVueloMapper {
         }
 
         if (dron != null) {
-            dto.setNumeroRegistro(dron.getNumeroDrone()); 
+            dto.setNumeroRegistro(dron.getNumeroRegistro()); 
         }
         
         return dto;

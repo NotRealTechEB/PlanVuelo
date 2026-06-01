@@ -45,7 +45,7 @@ public class PlanVueloController {
     //Obtener plan de vuelo por ID
 
     @GetMapping("/resumen")
-    public ResponseEntity<List<PlanVueloResponseDTO>> obtenerPVPorId(@RequestParam("idPlanVuelo") String rutPiloto) {
+    public ResponseEntity<List<PlanVueloResponseDTO>> obtenerPVPorRut(@RequestParam("rut") String rutPiloto) {
         List<PlanVueloResponseDTO> pV = pVueloService.historialPlanesPorRut(rutPiloto);
         return ResponseEntity.ok(pV);
     }
@@ -68,7 +68,7 @@ public class PlanVueloController {
 
     //Eliminar planes de vuelo
     
-    @DeleteMapping()
+    @DeleteMapping
     public ResponseEntity<String> eliminarPV(@RequestParam("idPlanVuelo") int idPlanVuelo){
         pVueloService.eliminarPlanesVuelo(idPlanVuelo);
         return ResponseEntity.noContent().build();
