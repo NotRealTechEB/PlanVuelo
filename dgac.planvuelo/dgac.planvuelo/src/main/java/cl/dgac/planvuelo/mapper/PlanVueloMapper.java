@@ -1,5 +1,8 @@
 package cl.dgac.planvuelo.mapper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import cl.dgac.planvuelo.dto.CreatePlanVuelo;
 import cl.dgac.planvuelo.dto.DronResponseDTO;
 import cl.dgac.planvuelo.dto.PilotoResponseDTO;
@@ -18,34 +21,51 @@ public class PlanVueloMapper {
 
 
 
-
     public static PlanVueloResponseDTO toModel(PlanVuelo plan, PilotoResponseDTO piloto, DronResponseDTO dron) {
-    PlanVueloResponseDTO dto = new PlanVueloResponseDTO();
+        if (plan == null) return null;
 
-    dto.setHoraDespegue(plan.getHoraDespegue());
-    dto.setTiempoEstimado(plan.getTiempoEstimado());
+        PlanVueloResponseDTO dto = new PlanVueloResponseDTO();
 
-    if(plan.getHoraDespegue() != null){
-        dto.setHoraAterrizajeEstimada(plan.getHoraDespegue().plusMinutes(plan.getTiempoEstimado()));
+        dto.setHoraDespegue(plan.getHoraDespegue());
+        dto.setTiempoEstimado(plan.getTiempoEstimado());
+
+        if (plan.getHoraDespegue() != null) {
+            dto.setHoraAterrizajeEstimada(plan.getHoraDespegue().plusMinutes(plan.getTiempoEstimado()));
+        }
+
+        dto.setPsGPS(plan.getPsGPS());
+        if (plan.getRegion() != null) {
+            dto.setRegion(plan.getRegion().name());
+        }
+        
+        if (piloto != null) {
+            dto.setRutPiloto(piloto.getRutPiloto());
+
+            String pNombre = piloto.getPNombrePiloto() != null ? piloto.getPNombrePiloto() : "";
+            String sNombre = piloto.getSNombrePiloto() != null ? piloto.getSNombrePiloto() : "";
+            String apPaterno = piloto.getApPaternoPiloto() != null ? piloto.getApPaternoPiloto() : "";
+            String apMaterno = piloto.getApMaternoPiloto() != null ? piloto.getApMaternoPiloto() : "";
+
+            dto.setNomCompPiloto((pNombre + " " + sNombre + " " + apPaterno + " " + apMaterno).trim());
+        }
+
+        if (dron != null) {
+            dto.setNumeroRegistro(dron.getNumeroDrone()); 
+        }
+        
+        return dto;
     }
 
-    dto.setPsGPS(plan.getPsGPS());
-    
-    if (piloto != null) {
-        dto.setRutPiloto(piloto.getRutPiloto());
-
-        String pNombre = piloto.getPNombrePiloto() != null ? piloto.getPNombrePiloto():"";
-        String sNombre = piloto.getSNombrePiloto() != null ? piloto.getSNombrePiloto():"";
-        String apPaterno = piloto.getApPaternoPiloto() != null ? piloto.getApPaternoPiloto():"";
-        String apMaterno = piloto.getApMaternoPiloto() != null ? piloto.getApMaternoPiloto():"";
-
-        dto.setNomCompPiloto((pNombre + " " + sNombre + " " + apPaterno + " " + apMaterno).trim());
-    }
-
-    if (dron != null) {
-        dto.setNumeroRegistro(dron.getNumeroDrone()); 
-    }
-    
-    return dto;
+    public static List<PlanVueloResponseDTO> toModelList(List<PlanVuelo> listaPlanes) {
+        if (listaPlanes == null) return new ArrayList<>();
+        
+        List<PlanVueloResponseDTO> listaDtos = new ArrayList<>();
+        
+        for (PlanVuelo plan : listaPlanes) {
+            PlanVueloResponseDTO dto = toModel(plan, null, null); 
+            listaDtos.add(dto);
+        }
+        
+        return listaDtos;
 }
 }

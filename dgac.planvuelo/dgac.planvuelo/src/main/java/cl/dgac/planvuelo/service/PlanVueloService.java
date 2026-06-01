@@ -1,9 +1,12 @@
 package cl.dgac.planvuelo.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
 
 import cl.dgac.planvuelo.dto.DronResponseDTO;
 import cl.dgac.planvuelo.dto.PilotoResponseDTO;
@@ -17,7 +20,15 @@ import cl.dgac.planvuelo.repository.PlanVueloRepository;
 public class PlanVueloService {
     @Autowired
     private PlanVueloRepository planVueloRepository;
-    private ComunicacionApi comunicacionApis;
+    private WebClient pilotoApiWebClient;
+    private WebClient dronApiWebClient;
+
+    public PlanVueloService(
+            @Qualifier("pilotoApiWebClient") WebClient pilotoApiWebClient,
+            @Qualifier("dronApiWebClient") WebClient dronApiWebClient) {
+        this.pilotoApiWebClient = pilotoApiWebClient;
+        this.dronApiWebClient = dronApiWebClient;
+    }
 
     //Metodos para mostrar los planes de vuelo registrados.
 
@@ -61,14 +72,45 @@ public class PlanVueloService {
 
     //Obtención del Plan de vuelo completo
 
-    public PlanVueloResponseDTO planVueloCompleto(String rutPiloto) {
-        List<PlanVuelo> plan = planVueloRepository.findByRutPiloto(rutPiloto);
-        if (plan == null) {
-        throw new ResourceNotFoundException("ID Plan de vuelo " + rutPiloto + " no existe.");
+    public List<PlanVueloResponseDTO> historialPlanesPorRut(String rutPiloto) {
+    List<PlanVuelo> planes = planVueloRepository.findByRutPiloto(rutPiloto);
+    
+    if (planes.isEmpty()) {
+        throw new ResourceNotFoundException("No hay planes de vuelo registrados del Rut: " + rutPiloto);
     }
-        PilotoResponseDTO piloto = comunicacionApis.obtenerResumenPiloto(rutPiloto)
-        DronResponseDTO dron = comunicacionApis.obtenerDatosDron();
 
-        return PlanVueloMapper.toModel(plan, piloto, dron);
+    PilotoResponseDTO pilotoDto = obtenerResumenPiloto(rutPiloto);
+
+    List<PlanVueloResponseDTO> respuestaDtos = new ArrayList<>();
+        for (PlanVuelo plan : planes) {
+            DronResponseDTO dronDto = obtenerDatosDron(plan.getNumeroDrone());
+            
+            PlanVueloResponseDTO dto = PlanVueloMapper.toModel(plan, pilotoDto, dronDto);
+            respuestaDtos.add(dto);
+        }
+
+    return respuestaDtos;
+    }
+
+    // Comunicación a API de Pilotos 
+
+    public PilotoResponseDTO obtenerResumenPiloto(String rutPiloto) {
+        try {
+            return pilotoApiWebClient.get().uri(uriBuilder -> uriBuilder.path("/api/v1/piloto/resumen").queryParam("rut", rutPiloto)
+                .build()).retrieve().bodyToMono(PilotoResponseDTO.class).block();
+        } catch (Exception ex) {
+            return null;
+        }
+    }
+
+    //Comunicación a API de Drones
+
+    public DronResponseDTO obtenerDatosDron(String numDron){
+        try {
+            return dronApiWebClient.get().uri(uriBuilder -> uriBuilder.path("/api/drones").queryParam("numeroDrone", numDron)
+                .build()).retrieve().bodyToMono(DronResponseDTO.class).block();
+        } catch (Exception ex) {
+            return null; 
+        }
     }
 }

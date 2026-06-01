@@ -45,8 +45,8 @@ public class PlanVueloController {
     //Obtener plan de vuelo por ID
 
     @GetMapping("/resumen")
-    public ResponseEntity<PlanVueloResponseDTO> obtenerPVPorId(@RequestParam("idPlanVuelo") int idPlanVuelo) {
-        PlanVueloResponseDTO pV = pVueloService.planVueloCompleto(idPlanVuelo);
+    public ResponseEntity<List<PlanVueloResponseDTO>> obtenerPVPorId(@RequestParam("idPlanVuelo") String rutPiloto) {
+        List<PlanVueloResponseDTO> pV = pVueloService.historialPlanesPorRut(rutPiloto);
         return ResponseEntity.ok(pV);
     }
 
