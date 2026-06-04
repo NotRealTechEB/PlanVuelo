@@ -26,8 +26,8 @@ public class PlanVuelo {
     @Column(name="rutPiloto", nullable = false, length=12)
     private String rutPiloto;
 
-    @Column(name="numeroDron")
-    private String numeroDrone;
+    @Column(name = "numeroRegistro", nullable = false, length = 12)
+    private String numeroRegistro;
 
     @Column(name = "ubicacionGPS", nullable=false, length = 30)
     private String psGPS;
@@ -44,6 +44,9 @@ public class PlanVuelo {
     @Column(name = "region", nullable=false, length=18)
     private Region region;
 
-    @Column(name = "codigoVuelo", length = 20)
+    @Column(name = "codigoVuelo", length = 12)
     private String codigoVuelo;
+
+    @Column(name="estado", length=10)
+    private String estadoPV;
 }

@@ -5,15 +5,19 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.server.ResponseStatusException;
 
-import cl.dgac.planvuelo.dto.DronResponseDTO;
-import cl.dgac.planvuelo.dto.PilotoResponseDTO;
-import cl.dgac.planvuelo.dto.PlanVueloResponseDTO;
+import cl.dgac.planvuelo.dto.CreatePlanVuelo;
+import cl.dgac.planvuelo.dto.EmpresaMandanteDTO;
+import cl.dgac.planvuelo.dto.PilotoDTO;
+import cl.dgac.planvuelo.dto.PlanVueloDTO;
 import cl.dgac.planvuelo.exception.ResourceNotFoundException;
 import cl.dgac.planvuelo.mapper.PlanVueloMapper;
 import cl.dgac.planvuelo.model.PlanVuelo;
+import cl.dgac.planvuelo.model.Region;
 import cl.dgac.planvuelo.repository.PlanVueloRepository;
 
 @Service
@@ -21,14 +25,17 @@ public class PlanVueloService {
     @Autowired
     private PlanVueloRepository planVueloRepository;
     private WebClient pilotoApiWebClient;
-    private WebClient dronApiWebClient;
+    private WebClient empApiWebClient;
 
     public PlanVueloService(
             @Qualifier("pilotoApiWebClient") WebClient pilotoApiWebClient,
-            @Qualifier("dronApiWebClient") WebClient dronApiWebClient) {
+            @Qualifier("dronApiWebClient") WebClient dronApiWebClient,
+            @Qualifier("empApiWebClient") WebClient empApiWebClient ){
         this.pilotoApiWebClient = pilotoApiWebClient;
-        this.dronApiWebClient = dronApiWebClient;
+        this.empApiWebClient = empApiWebClient;
     }
+
+    //-------------------------------Metodos de administracion-------------------------------//
 
     //Metodos para mostrar los planes de vuelo registrados.
 
@@ -40,21 +47,6 @@ public class PlanVueloService {
         //Planes por ID
     public PlanVuelo encontrarPVById(int idPlanVuelo){
         return planVueloRepository.findById(idPlanVuelo).orElseThrow(() -> new ResourceNotFoundException("ID Plan de vuelo " + idPlanVuelo + " no existe."));
-    }
-
-        //Planes por Rut de piloto
-    public List<PlanVuelo> pVByRutPiloto(String rutPiloto){
-        List<PlanVuelo> listPV = planVueloRepository.findByRutPiloto(rutPiloto);
-        if(listPV.isEmpty()){
-            throw new ResourceNotFoundException("No hay planes registrados por el piloto, rut: " +rutPiloto);
-        }
-        return listPV;
-    }    
-
-    //Método para agregar un plan de vuelo
-
-    public PlanVuelo agregarPlanesVuelo(PlanVuelo pV){
-        return planVueloRepository.save(pV);
     }
 
     //Actualizar datos de plan de vuelo
@@ -70,45 +62,59 @@ public class PlanVueloService {
         return "El plan de vuelo ha sido eliminado";
     }
 
-    //Obtención del Plan de vuelo completo
-
-    public List<PlanVueloResponseDTO> historialPlanesPorRut(String rutPiloto) {
-    List<PlanVuelo> planes = planVueloRepository.findByRutPiloto(rutPiloto);
     
-    if (planes.isEmpty()) {
-        throw new ResourceNotFoundException("No hay planes de vuelo registrados del Rut: " + rutPiloto);
-    }
+    //-------------------------------Metodos HU - Piloto-------------------------------//
 
-    PilotoResponseDTO pilotoDto = obtenerResumenPiloto(rutPiloto);
+    //Obtención del Plan de vuelos por RUT Piloto 
 
-    List<PlanVueloResponseDTO> respuestaDtos = new ArrayList<>();
-        for (PlanVuelo plan : planes) {
-            DronResponseDTO dronDto = obtenerDatosDron(plan.getNumeroDrone());
-            
-            PlanVueloResponseDTO dto = PlanVueloMapper.toModel(plan, pilotoDto, dronDto);
-            respuestaDtos.add(dto);
+    public List<PlanVueloDTO> obtenerPlanByRut(String rutPiloto) {
+        List<PlanVuelo> planes = planVueloRepository.findByRutPiloto(rutPiloto);
+
+        if (planes.isEmpty()) {
+            return new ArrayList<>();
         }
 
-    return respuestaDtos;
+        PilotoDTO piloto = pilotoApiWebClient.get().uri(uriBuilder -> uriBuilder.path("/api/v1/pilotos/datos-piloto").queryParam("rut", rutPiloto).build())
+            .retrieve().bodyToMono(PilotoDTO.class).block(); 
+                
+
+        return planes.stream().map(plan -> PlanVueloMapper.toModel(plan, piloto)).toList();
     }
 
-    // Comunicación a API de Pilotos 
+    //Agregar un plan de vuelo
 
-    public PilotoResponseDTO obtenerResumenPiloto(String rutPiloto) {
+    public PlanVuelo agregarPlanesVuelo(PlanVuelo pV, CreatePlanVuelo cPV){
+        pV.setRutPiloto(cPV.rutPiloto());
+        pV.setNumeroRegistro(cPV.numeroRegistro());
+        pV.setHoraDespegue(cPV.horaDespegue());
+        pV.setAltMax(cPV.altMax());
+        pV.setPsGPS(cPV.psGPS());
+        pV.setTiempoEstimado(cPV.tiempoEstimado());
+        pV.setEstadoPV("Pendiente");
+
+        Region region;
         try {
-            return pilotoApiWebClient.get().uri(uriBuilder -> uriBuilder.path("/api/v1/piloto/resumen").queryParam("rut", rutPiloto)
-                .build()).retrieve().bodyToMono(PilotoResponseDTO.class).block();
-        } catch (Exception ex) {
-            return null;
+        String regionTexto = cPV.region().toUpperCase().trim();
+        region = Region.valueOf(regionTexto);
+        } catch (IllegalArgumentException e) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "La región '"+ cPV.region()+"' no es válida: ");
         }
+        pV.setRegion(region);
+
+        String codRut = cPV.rutPiloto().substring(2,6);
+        String codReg = cPV.region().substring(0, 2).toUpperCase();
+        String codDron = cPV.numeroRegistro().substring(0,1).toUpperCase();
+        String codVuelo = "PV-"+ codRut + codReg + codDron;
+        pV.setCodigoVuelo(codVuelo);
+        return planVueloRepository.save(pV);
     }
 
-    //Comunicación a API de Drones
+    //Comunicación a API de empresa mandante
 
-    public DronResponseDTO obtenerDatosDron(String numDron){
+    public EmpresaMandanteDTO obtenerDatosEmpresa(String nombre){
         try {
-            return dronApiWebClient.get().uri(uriBuilder -> uriBuilder.path("/api/drones").queryParam("numeroDrone", numDron)
-                .build()).retrieve().bodyToMono(DronResponseDTO.class).block();
+            return empApiWebClient.get().uri(uriBuilder -> uriBuilder.path("/api/v1.5/Emandante/buscaNombre").queryParam("nombre", nombre)
+                .build()).retrieve().bodyToMono(EmpresaMandanteDTO.class).block();
         } catch (Exception ex) {
             return null; 
         }

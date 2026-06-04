@@ -8,11 +8,16 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class WebClientConfig {
     @Bean(name="pilotoApiWebClient")
     public WebClient pilotoApiWebClient(){
-        return WebClient.builder().baseUrl("http://localhost:8081").build();
+        return WebClient.builder().baseUrl("http://localhost:8086").build();
     }
 
     @Bean(name="dronApiWebClient")
     public WebClient dronWebClient() {
-        return WebClient.builder().baseUrl("http://localhost:8085").build();
+        return WebClient.builder().baseUrl("http://localhost:8083").build();
+    }
+
+    @Bean(name="empApiWebClient")
+    public WebClient empWebClient() {
+        return WebClient.builder().baseUrl("http://localhost:8088").build();
     }
 }

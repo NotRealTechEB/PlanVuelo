@@ -9,20 +9,18 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PlanVueloResponseDTO {
+public class PlanVueloDTO {
 
+    private String codigoVuelo;
+    private String numeroRegistro;
     private LocalDateTime horaDespegue;
     private LocalDateTime horaAterrizajeEstimada;
     private int tiempoEstimado;
-
     private String psGPS;
-
     private double altMax;
-
     private String region;
+    private String estadoPV;
     
-    private String nomCompPiloto;
-    private String rutPiloto;
-
-    private String numeroRegistro;
+    PilotoDTO pilotoDTO;
+    EmpresaMandanteDTO empDTO;
 }
