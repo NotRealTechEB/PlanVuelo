@@ -31,15 +31,15 @@ public class PlanVueloController {
     private final PlanVueloService pVueloService;
     private final WebClient pilotoApiWebClient;
     private final WebClient dronApiWebClient;
-    private final WebClient empApiWebClient;
+    private final WebClient licenciaApiWebClient;
 
     public PlanVueloController(PlanVueloService pVueloService, @Qualifier("pilotoApiWebClient")WebClient pilotoApiWebClient,
-        @Qualifier("dronApiWebClient")WebClient dronApiWebClient, @Qualifier("empApiWebClient")WebClient empApiWebClient)
+        @Qualifier("dronApiWebClient")WebClient dronApiWebClient,@Qualifier("licenciaApiWebClient")WebClient licenciaApiWebClient)
     {
         this.pVueloService = pVueloService;
         this.pilotoApiWebClient = pilotoApiWebClient;
         this.dronApiWebClient = dronApiWebClient;
-        this.empApiWebClient = empApiWebClient;
+        this.licenciaApiWebClient = licenciaApiWebClient;
     }
 
     //-------------------------------Metodos de administracion-------------------------------//
@@ -63,7 +63,7 @@ public class PlanVueloController {
 
     //Actualizar datos de planes de vuelo
 
-    @PutMapping
+    @PutMapping("/{idPlanVuelo}")
     public ResponseEntity<PlanVuelo> actualizarPV(@PathVariable("idPlanVuelo") int idPlanVuelo, @Valid @RequestBody UpdatePlanVuelo request){
         PlanVuelo pV = pVueloService.actualizarPlanesVuelo(PlanVueloMapper.toModel(request));
         return ResponseEntity.status(HttpStatus.CREATED).body(pV);
@@ -71,7 +71,7 @@ public class PlanVueloController {
 
     //Eliminar planes de vuelo
     
-    @DeleteMapping
+    @DeleteMapping("/{idPlanVuelo}")
     public ResponseEntity<String> eliminarPV(@PathVariable("idPlanVuelo") int idPlanVuelo){
         pVueloService.eliminarPlanesVuelo(idPlanVuelo);
         return ResponseEntity.noContent().build();
@@ -83,8 +83,14 @@ public class PlanVueloController {
     //Obtener plan de vuelo por RUT de piloto
 
     @GetMapping("/planes")
-    public ResponseEntity<List<PlanVueloDTO>> listarPorPiloto(@RequestParam String rut) {
+    public ResponseEntity<List<PlanVueloDTO>> listarPorPiloto(@RequestParam("rut") String rut) {
         List<PlanVueloDTO> planes = pVueloService.obtenerPlanByRut(rut);
         return ResponseEntity.ok(planes);
+    }
+
+    @GetMapping("/integrar")
+    public ResponseEntity<PlanVueloDTO> datosPorCodigo(@RequestParam("codVuelo") String codVuelo){
+        PlanVueloDTO datos = pVueloService.obtenerPlanByCodigo(codVuelo);
+        return ResponseEntity.ok(datos);
     }
 }

@@ -29,14 +29,11 @@ public class PlanVuelo {
     @Column(name = "numeroRegistro", nullable = false, length = 12)
     private String numeroRegistro;
 
-    @Column(name = "ubicacionGPS", nullable=false, length = 30)
+    @Column(name = "ubicacionGPS", nullable = false, length = 30)
     private String psGPS;
 
-    @Column(name = "horaDespegue", nullable=false)
-    private LocalDateTime horaDespegue;
-
-    @Column(name = "tiempoEstimadoMinutos", nullable=false)
-    private int tiempoEstimado;
+    @Column(name = "fechaPV", nullable=false)
+    private LocalDateTime fechaPV;
 
     @Column(name = "alturaMaxima", nullable=false)
     private double altMax;

@@ -11,7 +11,6 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ResponseStatusException;
 
 import cl.dgac.planvuelo.dto.CreatePlanVuelo;
-import cl.dgac.planvuelo.dto.EmpresaMandanteDTO;
 import cl.dgac.planvuelo.dto.PilotoDTO;
 import cl.dgac.planvuelo.dto.PlanVueloDTO;
 import cl.dgac.planvuelo.exception.ResourceNotFoundException;
@@ -25,14 +24,14 @@ public class PlanVueloService {
     @Autowired
     private PlanVueloRepository planVueloRepository;
     private WebClient pilotoApiWebClient;
-    private WebClient empApiWebClient;
+    private WebClient licenciaApiWebClient;
 
     public PlanVueloService(
             @Qualifier("pilotoApiWebClient") WebClient pilotoApiWebClient,
             @Qualifier("dronApiWebClient") WebClient dronApiWebClient,
-            @Qualifier("empApiWebClient") WebClient empApiWebClient ){
+            @Qualifier("licenciaApiWebClient") WebClient licenciaApiWebClient ){
         this.pilotoApiWebClient = pilotoApiWebClient;
-        this.empApiWebClient = empApiWebClient;
+        this.licenciaApiWebClient = licenciaApiWebClient;
     }
 
     //-------------------------------Metodos de administracion-------------------------------//
@@ -76,8 +75,7 @@ public class PlanVueloService {
 
         PilotoDTO piloto = pilotoApiWebClient.get().uri(uriBuilder -> uriBuilder.path("/api/v1/pilotos/datos-piloto").queryParam("rut", rutPiloto).build())
             .retrieve().bodyToMono(PilotoDTO.class).block(); 
-                
-
+        
         return planes.stream().map(plan -> PlanVueloMapper.toModel(plan, piloto)).toList();
     }
 
@@ -86,10 +84,9 @@ public class PlanVueloService {
     public PlanVuelo agregarPlanesVuelo(PlanVuelo pV, CreatePlanVuelo cPV){
         pV.setRutPiloto(cPV.rutPiloto());
         pV.setNumeroRegistro(cPV.numeroRegistro());
-        pV.setHoraDespegue(cPV.horaDespegue());
+        pV.setFechaPV(cPV.fecha());
         pV.setAltMax(cPV.altMax());
         pV.setPsGPS(cPV.psGPS());
-        pV.setTiempoEstimado(cPV.tiempoEstimado());
         pV.setEstadoPV("Pendiente");
 
         Region region;
@@ -102,21 +99,20 @@ public class PlanVueloService {
         pV.setRegion(region);
 
         String codRut = cPV.rutPiloto().substring(2,6);
-        String codReg = cPV.region().substring(0, 2).toUpperCase();
-        String codDron = cPV.numeroRegistro().substring(0,1).toUpperCase();
+        String codReg = cPV.region().substring(0, 3).toUpperCase();
+        String codDron = cPV.numeroRegistro().substring(0,2).toUpperCase();
         String codVuelo = "PV-"+ codRut + codReg + codDron;
         pV.setCodigoVuelo(codVuelo);
         return planVueloRepository.save(pV);
     }
 
-    //Comunicación a API de empresa mandante
+    //Obtener datos por codigo de vuelo
 
-    public EmpresaMandanteDTO obtenerDatosEmpresa(String nombre){
-        try {
-            return empApiWebClient.get().uri(uriBuilder -> uriBuilder.path("/api/v1.5/Emandante/buscaNombre").queryParam("nombre", nombre)
-                .build()).retrieve().bodyToMono(EmpresaMandanteDTO.class).block();
-        } catch (Exception ex) {
-            return null; 
-        }
+    public PlanVueloDTO obtenerPlanByCodigo(String codigoVuelo) {
+    PlanVuelo plan = planVueloRepository.findByCodigoVuelo(codigoVuelo); 
+    if (plan == null) {
+        throw new ResourceNotFoundException("El codigo '" + codigoVuelo + "' no coincide con un plan de vuelo registrado."); 
+    }
+    return PlanVueloMapper.toModel(plan, null); 
     }
 }

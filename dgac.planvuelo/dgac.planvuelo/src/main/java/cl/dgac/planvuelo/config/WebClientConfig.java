@@ -16,8 +16,8 @@ public class WebClientConfig {
         return WebClient.builder().baseUrl("http://localhost:8083").build();
     }
 
-    @Bean(name="empApiWebClient")
+    @Bean(name="licenciaApiWebClient")
     public WebClient empWebClient() {
-        return WebClient.builder().baseUrl("http://localhost:8088").build();
+        return WebClient.builder().baseUrl("http://localhost:8085").build();
     }
 }

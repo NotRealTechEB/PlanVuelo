@@ -13,14 +13,11 @@ public class PlanVueloDTO {
 
     private String codigoVuelo;
     private String numeroRegistro;
-    private LocalDateTime horaDespegue;
-    private LocalDateTime horaAterrizajeEstimada;
-    private int tiempoEstimado;
+    private LocalDateTime fechaPV;
     private String psGPS;
     private double altMax;
     private String region;
     private String estadoPV;
     
     PilotoDTO pilotoDTO;
-    EmpresaMandanteDTO empDTO;
 }

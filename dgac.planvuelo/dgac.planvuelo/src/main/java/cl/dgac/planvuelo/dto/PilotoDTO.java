@@ -14,6 +14,5 @@ public class PilotoDTO {
     private String segundoNombre;
     private String apellidoPaterno;
     private String apellidoMaterno;
-    private String nombreEmpresa;
 }
  

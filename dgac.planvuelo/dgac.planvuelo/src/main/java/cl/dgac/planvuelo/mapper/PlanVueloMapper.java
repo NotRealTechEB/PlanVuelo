@@ -11,24 +11,22 @@ import cl.dgac.planvuelo.model.PlanVuelo;
 
 public class PlanVueloMapper {
     public static PlanVuelo toModel(CreatePlanVuelo request){
-        return new PlanVuelo(0, request.rutPiloto(), request.numeroRegistro(),request.psGPS(), request.horaDespegue(), request.tiempoEstimado()
-        , request.altMax(), null, null, null);
+        return new PlanVuelo(0, request.rutPiloto(), request.numeroRegistro(), request.psGPS(), request.fecha(), request.altMax(), 
+        null, null, null);
     }
 
     public static PlanVuelo toModel(UpdatePlanVuelo request){
-        return new PlanVuelo(0, request.rutPiloto(), request.numeroRegistro(),request.psGPS(), request.horaDespegue(), request.tiempoEstimado()
-        , request.altMax(), null, null, null);
+        return new PlanVuelo(0, request.rutPiloto(), request.numeroRegistro(), request.psGPS(), request.fecha(), request.altMax(), 
+        null, null, null);
     }
 
     public static PlanVueloDTO toModel(PlanVuelo plan, PilotoDTO piloto) {
         PlanVueloDTO dto = new PlanVueloDTO();
         dto.setCodigoVuelo(plan.getCodigoVuelo());
         dto.setNumeroRegistro(plan.getNumeroRegistro());
-        dto.setHoraDespegue(plan.getHoraDespegue());
-        dto.setTiempoEstimado(plan.getTiempoEstimado());
+        dto.setFechaPV(plan.getFechaPV());
         dto.setPsGPS(plan.getPsGPS());
         dto.setAltMax(plan.getAltMax());
-        dto.setHoraAterrizajeEstimada(plan.getHoraDespegue().plusMinutes(plan.getTiempoEstimado()));
         dto.setRegion(plan.getRegion().name());
         dto.setEstadoPV(plan.getEstadoPV());
         dto.setPilotoDTO(piloto);
@@ -47,5 +45,7 @@ public class PlanVueloMapper {
         }
         
         return listaDtos;
+
+    
 }
 }

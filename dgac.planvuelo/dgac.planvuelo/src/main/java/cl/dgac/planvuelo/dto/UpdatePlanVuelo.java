@@ -26,14 +26,11 @@ public record UpdatePlanVuelo (
     //HORA DE DESPEGUE
     @NotNull(message = "La hora de despegue no puede ser nula") 
     @Future(message = "La hora de despegue debe ser una fecha futura")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")LocalDateTime horaDespegue,
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")LocalDateTime fecha,
 
     //ALTURA MAXIMA
     @NotNull(message = "La altura maxima no puede ser nula") 
     @Positive(message = "La altura máxima debe ser un valor positivo") Double altMax,
-
-    //TIEMPO ESTIMADO
-    @Positive(message = "El tiempo estimado debe ser mayor a cero") Integer tiempoEstimado,
 
     //REGION
     @NotNull(message = "Debe ingresar la región") String region,
