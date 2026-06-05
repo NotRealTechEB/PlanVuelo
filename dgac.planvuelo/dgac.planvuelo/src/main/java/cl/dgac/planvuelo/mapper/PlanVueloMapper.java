@@ -11,13 +11,13 @@ import cl.dgac.planvuelo.model.PlanVuelo;
 
 public class PlanVueloMapper {
     public static PlanVuelo toModel(CreatePlanVuelo request){
-        return new PlanVuelo(0, request.rutPiloto(), request.numeroRegistro(), request.psGPS(), request.fecha(), request.altMax(), 
-        null, null, null);
+        return new PlanVuelo(0, request.rutPiloto(), request.rutEmpMandante(), request.numeroRegistro(),
+        request.psGPS(), request.fecha(), request.altMax(), null, null, null);
     }
 
     public static PlanVuelo toModel(UpdatePlanVuelo request){
-        return new PlanVuelo(0, request.rutPiloto(), request.numeroRegistro(), request.psGPS(), request.fecha(), request.altMax(), 
-        null, null, null);
+        return new PlanVuelo(0, request.rutPiloto(), request.rutEmpMandante(), request.numeroRegistro(),
+        request.psGPS(), request.fecha(), request.altMax(), null, null, null);
     }
 
     public static PlanVueloDTO toModel(PlanVuelo plan, PilotoDTO piloto) {

@@ -26,6 +26,9 @@ public class PlanVuelo {
     @Column(name="rutPiloto", nullable = false, length=12)
     private String rutPiloto;
 
+    @Column(name="rutEmpresaMandante", nullable = false, length=12)
+    private String rutEmpMandante;
+
     @Column(name = "numeroRegistro", nullable = false, length = 12)
     private String numeroRegistro;
 

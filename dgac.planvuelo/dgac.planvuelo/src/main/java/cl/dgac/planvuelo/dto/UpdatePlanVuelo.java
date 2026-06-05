@@ -16,6 +16,10 @@ public record UpdatePlanVuelo (
     @NotNull(message = "El RUT del piloto es obligatorio")
     @Size(min = 8, max = 12, message = "El RUT debe tener entre 8 y 12 caracteres")String rutPiloto,
 
+    //RUT EMPRESA MANDANTE
+    @NotNull(message = "El RUT del piloto es obligatorio")
+    @Size(min = 15, max = 15, message = "El RUT debe tener entre 8 y 12 caracteres")String rutEmpMandante,
+
     //REGISTRO DRON
     @NotNull(message = "Debe agregar el número de registro del dron")String numeroRegistro,
 
