@@ -116,4 +116,12 @@ public class PlanVueloService {
     }
     return PlanVueloMapper.toModel(plan, null); 
     }
+
+    public List<PlanVueloDTO> listarRutempresa(String rutEmpresa){
+        List<PlanVueloDTO> lista= PlanVueloMapper.toModelList(planVueloRepository.findByRutEmpMandante(rutEmpresa));
+        if (lista.isEmpty()){
+            throw new ResourceNotFoundException("no existen planes de vuelo para el rut  "+ rutEmpresa);
+        }
+        return lista;
+    }
 }

@@ -93,4 +93,11 @@ public class PlanVueloController {
         PlanVueloDTO datos = pVueloService.obtenerPlanByCodigo(codVuelo);
         return ResponseEntity.ok(datos);
     }
+
+    //_______________metodos para las empresa mandante _______________________________________//
+    @GetMapping("/listarPoRut")
+    public ResponseEntity<List<PlanVueloDTO>> ListarPorRut(@RequestParam(name = "rut") String rut) {
+        return new ResponseEntity<List<PlanVueloDTO>> (pVueloService.listarRutempresa(rut),HttpStatus.OK) ;
+    }
+    
 }

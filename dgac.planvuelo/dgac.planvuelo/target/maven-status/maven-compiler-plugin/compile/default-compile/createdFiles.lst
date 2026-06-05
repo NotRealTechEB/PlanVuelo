@@ -1,0 +1,14 @@
+cl/dgac/planvuelo/config/WebClientConfig.class
+cl/dgac/planvuelo/mapper/PlanVueloMapper.class
+cl/dgac/planvuelo/model/PlanVuelo.class
+cl/dgac/planvuelo/service/PlanVueloService.class
+cl/dgac/planvuelo/model/Region.class
+cl/dgac/planvuelo/exception/GlobalExceptionHandler.class
+cl/dgac/planvuelo/dto/PlanVueloDTO.class
+cl/dgac/planvuelo/Application.class
+cl/dgac/planvuelo/dto/PilotoDTO.class
+cl/dgac/planvuelo/dto/UpdatePlanVuelo.class
+cl/dgac/planvuelo/dto/CreatePlanVuelo.class
+cl/dgac/planvuelo/repository/PlanVueloRepository.class
+cl/dgac/planvuelo/controller/PlanVueloController.class
+cl/dgac/planvuelo/exception/ResourceNotFoundException.class

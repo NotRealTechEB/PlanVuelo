@@ -12,5 +12,6 @@ public interface PlanVueloRepository extends JpaRepository<PlanVuelo, Integer>{
 
     List<PlanVuelo> findByRutPiloto(String rutPiloto);
     PlanVuelo findByCodigoVuelo(String rutPiloto);
+    List<PlanVuelo> findByRutEmpMandante(String rutEmpMandante);
 
 }
