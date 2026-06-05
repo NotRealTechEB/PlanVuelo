@@ -83,6 +83,7 @@ public class PlanVueloService {
 
     public PlanVuelo agregarPlanesVuelo(PlanVuelo pV, CreatePlanVuelo cPV){
         pV.setRutPiloto(cPV.rutPiloto());
+        pV.setRutEmpMandante(cPV.rutEmpMandante());
         pV.setNumeroRegistro(cPV.numeroRegistro());
         pV.setFechaPV(cPV.fecha());
         pV.setAltMax(cPV.altMax());

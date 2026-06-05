@@ -14,10 +14,10 @@ public record CreatePlanVuelo (
 
     //RUT PILOTO
     @NotNull(message = "El RUT del piloto es obligatorio")
-    @Size(min = 11, max = 12, message = "El RUT debe tener entre 11 y 12 caracteres")String rutPiloto,
+    @Size(min = 9, max = 10, message = "El RUT debe tener entre 9 y 10 caracteres")String rutPiloto,
 
     //RUT EMPRESA MANDANTE
-    @NotNull(message = "El RUT del piloto es obligatorio")
+    @NotNull(message = "El RUT de la empresa es obligatorio")
     @Size(min = 10, max = 15, message = "El RUT debe tener entre 8 y 12 caracteres")String rutEmpMandante,
 
     //REGISTRO DRON
