@@ -11,6 +11,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ResponseStatusException;
 
 import cl.dgac.planvuelo.dto.CreatePlanVuelo;
+import cl.dgac.planvuelo.dto.LicenciaValidacionDTO;
 import cl.dgac.planvuelo.dto.PilotoDTO;
 import cl.dgac.planvuelo.dto.PlanVueloDTO;
 import cl.dgac.planvuelo.exception.ResourceNotFoundException;
@@ -81,7 +82,22 @@ public class PlanVueloService {
 
     //Agregar un plan de vuelo
 
+
+
     public PlanVuelo agregarPlanesVuelo(PlanVuelo pV, CreatePlanVuelo cPV){
+
+        LicenciaValidacionDTO validacion;
+    try {
+        validacion = licenciaApiWebClient.get().uri("/api/v1/licencia/validar?rut=" + cPV.rutPiloto()).retrieve().bodyToMono(LicenciaValidacionDTO.class).block(); 
+    } catch (Exception e) {
+        throw new ResponseStatusException(HttpStatus.valueOf(422), "Error al comunicarse con el servicio de licencias.");
+    }
+
+    if (validacion == null || !validacion.isEstValidacion()) {
+
+        throw new ResourceNotFoundException( "No se puede crear el plan de vuelo");
+    }
+
         pV.setRutPiloto(cPV.rutPiloto());
         pV.setRutEmpMandante(cPV.rutEmpMandante());
         pV.setNumeroRegistro(cPV.numeroRegistro());
