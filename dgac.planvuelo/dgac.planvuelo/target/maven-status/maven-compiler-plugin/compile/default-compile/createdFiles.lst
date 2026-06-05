@@ -5,6 +5,7 @@ cl/dgac/planvuelo/service/PlanVueloService.class
 cl/dgac/planvuelo/model/Region.class
 cl/dgac/planvuelo/exception/GlobalExceptionHandler.class
 cl/dgac/planvuelo/dto/PlanVueloDTO.class
+cl/dgac/planvuelo/dto/LicenciaValidacionDTO.class
 cl/dgac/planvuelo/Application.class
 cl/dgac/planvuelo/dto/PilotoDTO.class
 cl/dgac/planvuelo/dto/UpdatePlanVuelo.class
