@@ -8,7 +8,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 public class WebClientConfig {
     @Bean(name="pilotoApiWebClient")
     public WebClient pilotoApiWebClient(){
-        return WebClient.builder().baseUrl("http://localhost:8086").build();
+        return WebClient.builder().baseUrl("https://piloto-dfcf.onrender.com").build();
     }
 
     @Bean(name="dronApiWebClient")
@@ -18,6 +18,6 @@ public class WebClientConfig {
 
     @Bean(name="licenciaApiWebClient")
     public WebClient empWebClient() {
-        return WebClient.builder().baseUrl("http://localhost:8085").build();
+        return WebClient.builder().baseUrl("https://licencia-bvee.onrender.com").build();
     }
 }
