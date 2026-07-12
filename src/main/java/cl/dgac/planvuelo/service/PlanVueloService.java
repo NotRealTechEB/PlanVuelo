@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClientResponseException;
 import org.springframework.web.server.ResponseStatusException;
 
 import cl.dgac.planvuelo.dto.CreatePlanVuelo;
@@ -89,9 +90,10 @@ public class PlanVueloService {
         LicenciaValidacionDTO validacion;
     try {
         validacion = licenciaApiWebClient.get().uri("/api/v1/licencia/validar?rut=" + cPV.rutPiloto()).retrieve().bodyToMono(LicenciaValidacionDTO.class).block(); 
-    } catch (Exception e) {
-        throw new ResponseStatusException(HttpStatus.valueOf(422), "Error al comunicarse con el servicio de licencias.");
-    }
+    } catch (WebClientResponseException e) {
+        System.out.println("Error del servidor de licencias: " + e.getResponseBodyAsString());
+        throw new ResponseStatusException(e.getStatusCode(), "Error en servicio de licencias");
+}
 
     if (validacion == null || !validacion.isEstValidacion()) {
 
