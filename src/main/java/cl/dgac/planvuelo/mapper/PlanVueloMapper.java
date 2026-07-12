@@ -23,6 +23,7 @@ public class PlanVueloMapper {
     public static PlanVueloDTO toModel(PlanVuelo plan, PilotoDTO piloto) {
         PlanVueloDTO dto = new PlanVueloDTO();
         dto.setCodigoVuelo(plan.getCodigoVuelo());
+        dto.setRutEmpMandante(plan.getRutEmpMandante());
         dto.setNumeroRegistro(plan.getNumeroRegistro());
         dto.setFechaPV(plan.getFechaPV());
         dto.setPsGPS(plan.getPsGPS());
