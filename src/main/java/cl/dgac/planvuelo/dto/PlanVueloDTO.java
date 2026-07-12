@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 public class PlanVueloDTO {
 
     private String codigoVuelo;
-    private String rutEmpresaMandante;
+    private String rutEmpMandante;
     private String numeroRegistro;
     private LocalDateTime fechaPV;
     private String psGPS;
