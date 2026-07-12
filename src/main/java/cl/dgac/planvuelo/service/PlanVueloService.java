@@ -2,6 +2,8 @@ package cl.dgac.planvuelo.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -27,6 +29,8 @@ public class PlanVueloService {
     private PlanVueloRepository planVueloRepository;
     private WebClient pilotoApiWebClient;
     private WebClient licenciaApiWebClient;
+    private final Map<String, LicenciaValidacionDTO> cacheTemporal = new ConcurrentHashMap<>();
+    
 
     public PlanVueloService(
             @Qualifier("pilotoApiWebClient") WebClient pilotoApiWebClient,
@@ -83,17 +87,21 @@ public class PlanVueloService {
 
     //Agregar un plan de vuelo
 
+    public PlanVuelo agregarPlanesVuelo(PlanVuelo pV, CreatePlanVuelo cPV) {
+    LicenciaValidacionDTO validacion;
+    String rut = cPV.rutPiloto();
 
-
-    public PlanVuelo agregarPlanesVuelo(PlanVuelo pV, CreatePlanVuelo cPV){
-
-        LicenciaValidacionDTO validacion;
-    try {
-        validacion = licenciaApiWebClient.get().uri("/api/v1/licencia/validar?rut=" + cPV.rutPiloto()).retrieve().bodyToMono(LicenciaValidacionDTO.class).block(); 
-    } catch (WebClientResponseException e) {
-        System.out.println("Error del servidor de licencias: " + e.getResponseBodyAsString());
-        throw new ResponseStatusException(e.getStatusCode(), "Error en servicio de licencias");
-}
+    if (cacheTemporal.containsKey(rut)) {
+        validacion = cacheTemporal.get(rut);
+    } else {
+        try {
+            validacion = licenciaApiWebClient.get().uri("/api/v1/licencia/validar?rut=" + rut)
+                         .retrieve().bodyToMono(LicenciaValidacionDTO.class).block();
+            cacheTemporal.put(rut, validacion); 
+        } catch (WebClientResponseException e) {
+            throw new ResponseStatusException(e.getStatusCode(), "Error en servicio de licencias");
+        }
+    }
 
     if (validacion == null || !validacion.isEstValidacion()) {
 
