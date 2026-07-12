@@ -150,8 +150,10 @@ public class PlanVueloService {
         }
         List<PlanVueloDTO> ultimo = new ArrayList<>();
         for (PlanVueloDTO i : lista) {
-            i.setPilotoDTO(obtenerPlanByCodigo(i.getCodigoVuelo()).getPilotoDTO());
-            ultimo.add(i);
+            PlanVuelo plan = planVueloRepository.findByCodigoVuelo(i.getCodigoVuelo());
+        PilotoDTO piloto = pilotoApiWebClient.get().uri(uriBuilder -> uriBuilder.path("/api/v1/pilotos/datos-piloto").queryParam("rut", plan.getRutPiloto()).build())
+            .retrieve().bodyToMono(PilotoDTO.class).block();
+        ultimo.add( PlanVueloMapper.toModel(plan, piloto));
         };
         return ultimo;
     }
