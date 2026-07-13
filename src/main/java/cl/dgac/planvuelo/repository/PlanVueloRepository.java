@@ -11,7 +11,7 @@ import cl.dgac.planvuelo.model.PlanVuelo;
 public interface PlanVueloRepository extends JpaRepository<PlanVuelo, Integer>{
 
     List<PlanVuelo> findByRutPiloto(String rutPiloto);
-    PlanVuelo findByCodigoVuelo(String rutPiloto);
+    PlanVuelo findByCodigoVuelo(String codigoVuelo);
     List<PlanVuelo> findByRutEmpMandante(String rutEmpMandante);
 
 }
